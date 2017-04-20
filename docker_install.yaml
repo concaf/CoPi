@@ -1,0 +1,24 @@
+---
+- hosts: rpi3
+  remote_user: concaf
+  become: true
+
+  tasks:
+  - name: download docker v17.04.0-ce
+    unarchive:
+      src: https://get.docker.com/builds/Linux/armel/docker-17.04.0-ce.tgz
+      dest: /usr/bin/
+      remote_src: yes
+      extra_opts: --strip-components=1
+
+  - name: copy docker.service file
+    copy:
+      src: docker.service
+      dest: /usr/lib/systemd/system/
+
+  - name: do a daemon-reload for systemd
+    systemd:
+      name: docker
+      state: restarted
+      daemon_reload: yes
+      enabled: yes
