@@ -16,6 +16,7 @@
     copy:
       src: docker.service
       dest: /usr/lib/systemd/system/
+      force: no
 
   - name: do a daemon-reload for systemd
     systemd:
