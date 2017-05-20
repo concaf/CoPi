@@ -1,0 +1,6 @@
+---
+
+- name: install cfssl if not installed
+  include: install_cfssl.yml 
+
+#- name: generate CA certificate and private key

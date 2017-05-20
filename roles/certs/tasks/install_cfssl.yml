@@ -1,0 +1,17 @@
+---
+
+- name: check if cfssl exists in the PATH variable
+  command: which cfssl
+  register: cfssl_path
+  ignore_errors: true
+
+- name: download cfssl and cfssljson to /usr/local/bin/
+  become: true
+  get_url:
+    url: "{{ item.url }}"
+    dest: /usr/local/bin/{{ item.filename }}
+    mode: 755
+  when: cfssl_path.rc != 0
+  with_items:
+  - { url: "https://pkg.cfssl.org/R1.2/cfssl_linux-amd64", filename: "cfssl" }
+  - { url: "https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64", filename: "cfssljson" }

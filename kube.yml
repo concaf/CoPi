@@ -1,4 +1,9 @@
 ---
+
+- hosts: localhost
+  roles:
+  - certs
+
 - hosts: master,node
   remote_user: concaf
   become: true
