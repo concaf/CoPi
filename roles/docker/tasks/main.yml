@@ -11,13 +11,6 @@
 - name: copy docker.service file
   template:
     src: docker.service
-    dest: /usr/lib/systemd/system/
-    force: no
-
-- name: do a daemon-reload for systemd
-  systemd:
-    name: docker
-    state: restarted
-    daemon_reload: yes
-    enabled: yes
-
+    dest: /usr/lib/systemd/system/docker.service
+  notify:
+  - systemctl daemon-reload
