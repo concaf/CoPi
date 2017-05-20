@@ -1,0 +1,6 @@
+---
+- hosts: master,node
+  remote_user: concaf
+  become: true
+  roles:
+  - docker
