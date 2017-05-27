@@ -1,0 +1,18 @@
+CERT_CA_CSR_CN: Kubernetes
+CERT_ADMIN_CSR_CN: admin
+CERT_KUBE_PROXY_CSR_CN: system:kube-proxy
+CERT_KUBERNETES_CSR_CN: Kubernetes
+
+CERT_CA_CSR_O: Kubernetes
+CERT_ADMIN_CSR_O: system:administrator
+CERT_KUBE_PROXY_CSR_O: system:node-proxier
+CERT_KUBERNETES_CSR_O: Kubernetes
+
+CERT_CA_CSR_OU: CA
+CERT_ADMIN_CSR_OU: Cluster
+CERT_KUBE_PROXY_CSR_OU: Cluster
+CERT_KUBERNETES_CSR_OU: Cluster
+
+CERT_C: IN
+CERT_L: BLR
+CERT_ST: KA

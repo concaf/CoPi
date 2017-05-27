@@ -1,0 +1,34 @@
+---
+
+- name: create /tmp/certs/
+  file:
+    path: /tmp/certs/
+    state: directory
+
+- name: copy files to local /tmp/certs/
+  template:
+    src: "{{ item.template_name }}"
+    dest: /tmp/certs/{{ item.file_name }}
+  register: copy_templates
+  with_items:
+  - { template_name: "ca-config.json.j2", file_name: "ca-config.json" }
+  - { template_name: "ca-csr.json.j2", file_name: "ca-csr.json" }
+  - { template_name: "admin-csr.json.j2", file_name: "admin-csr.json" }
+  - { template_name: "kube-proxy-csr.json.j2", file_name: "kube-proxy-csr.json" }
+  - { template_name: "kubernetes-csr.json.j2", file_name: "kubernetes-csr.json" }
+
+- name: generate CS certificate and private key
+  shell: cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+  args:
+    chdir: /tmp/certs/
+  when: copy_templates.changed
+
+- name: generate admin client certificate and private key, kube-proxy client certificate and private key
+  shell: cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=kubernetes {{ item.csr }} | cfssljson -bare {{ item.file }}
+  args:
+    chdir: /tmp/certs/
+  when: copy_templates.changed
+  with_items:
+  - { csr: "admin-csr.json", file: "admin" }
+  - { csr: "kube-proxy-csr.json", file: "kube-proxy" }
+  - { csr: "kubernetes-csr.json", file: "kubernetes" }
