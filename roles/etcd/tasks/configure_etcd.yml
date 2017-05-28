@@ -12,6 +12,7 @@
     state: directory
     owner: concaf
     group: concaf
+    recurse: yes
 
 - name: copy etcd.service file
   template:

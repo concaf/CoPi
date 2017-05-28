@@ -1,10 +1,10 @@
 ---
 
-- name: copy ca.pem kubernetes-key.pem kubernetes.pem to /etc/etcd/
+- name: copy ca.pem etcd-key.pem etcd.pem to /etc/etcd/
   synchronize:
     src: /tmp/certs/{{ item }}
     dest: /etc/etcd/
   with_items:
   - ca.pem
-  - kubernetes-key.pem
-  - kubernetes.pem
+  - etcd-key.pem
+  - etcd.pem

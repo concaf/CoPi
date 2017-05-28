@@ -16,6 +16,7 @@
   - { template_name: "admin-csr.json.j2", file_name: "admin-csr.json" }
   - { template_name: "kube-proxy-csr.json.j2", file_name: "kube-proxy-csr.json" }
   - { template_name: "kubernetes-csr.json.j2", file_name: "kubernetes-csr.json" }
+  - { template_name: "etcd-csr.json.j2", file_name: "etcd-csr.json" }
 
 - name: generate CS certificate and private key
   shell: cfssl gencert -initca ca-csr.json | cfssljson -bare ca
@@ -32,3 +33,4 @@
   - { csr: "admin-csr.json", file: "admin" }
   - { csr: "kube-proxy-csr.json", file: "kube-proxy" }
   - { csr: "kubernetes-csr.json", file: "kubernetes" }
+  - { csr: "etcd-csr.json", file: "etcd" }
