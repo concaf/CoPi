@@ -1,0 +1,7 @@
+---
+
+- name: include bootstrap_kubeconfig handlers
+  include: bootstrap_kubeconfig.yml
+
+- name: include kube-proxy_kubeconfig handlers
+  include: kube-proxy_kubeconfig.yml
