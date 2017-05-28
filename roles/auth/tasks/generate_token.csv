@@ -1,0 +1,6 @@
+---
+
+- name: generate token.csv if it does not exist
+  template:
+    src: token.csv.j2
+    dest: /tmp/certs/token.csv

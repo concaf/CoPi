@@ -1,0 +1,7 @@
+---
+
+- name: copy generated certs
+  include: copy_certs.yml
+
+- name: install and configure etcd
+  include: configure_etcd.yml

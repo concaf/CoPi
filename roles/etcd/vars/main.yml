@@ -1,0 +1,1 @@
+ETCD_INTERNAL_IP: "{{ hostvars[inventory_hostname]['ip'] }}"

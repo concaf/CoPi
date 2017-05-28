@@ -1,0 +1,14 @@
+---
+
+- name: check if kubectl exists in the PATH variable
+  command: which kubectl
+  register: kubectl_path
+  ignore_errors: true
+
+- name: download kubectl to /usr/local/bin/
+  become: true
+  get_url:
+    url: https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/amd64/kubectl
+    dest: /usr/local/bin/kubectl
+    mode: 0755
+  when: kubectl_path.rc != 0

@@ -1,0 +1,13 @@
+---
+
+- name: install kubectl if not installed
+  include: install_kubectl.yml 
+
+- name: generate token.csv
+  include: generate_token.csv
+
+- name: generate bootstrap kubeconfig
+  include: create_bootstrap_kubeconfig.yml
+
+- name: generate kube proxy kubeconfig
+  include: create_kube-proxy_kubeconfig.yml

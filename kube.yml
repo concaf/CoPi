@@ -1,11 +1,26 @@
 ---
 
-- hosts: localhost
-  roles:
-  - certs
-
 - hosts: master,node
   remote_user: concaf
   become: true
   roles:
+  - common
   - docker
+  gather_facts: false
+
+- hosts: localhost
+  roles:
+  - certs
+  - auth
+  tags:
+  - local
+  - certs
+
+- hosts: etcd
+  remote_user: concaf
+  become: true
+  roles:
+  - etcd
+  gather_facts: false
+  tags:
+  - etcd
