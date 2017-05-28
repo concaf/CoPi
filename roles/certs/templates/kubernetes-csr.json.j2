@@ -1,7 +1,7 @@
 {
   "CN": "{{ CERT_KUBERNETES_CSR_CN }}",
   "hosts": [
-  {% for host in groups['node'] %}
+  {% for host in groups['master'] %}
   "{{ hostvars[host]['ip'] }}",
   {% endfor %}
   "127.0.0.1",
