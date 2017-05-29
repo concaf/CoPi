@@ -1,5 +1,25 @@
 ---
 
+- debug:
+    var: user_password
+  tags:
+  - debug
+
+- name: create user
+  user:
+    name: concaf
+    generate_ssh_key: yes
+    password: "{{ user_password }}"
+    system: yes
+    groups: wheel
+    state: present
+
+- name: add authorized_key
+  authorized_key:
+    user: concaf
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+
 - name: install packages
   yum:
     name: "{{ item }}"
@@ -7,3 +27,4 @@
   with_items:
   - rsync
   - bash-completion
+  - vim

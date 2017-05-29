@@ -4,7 +4,6 @@
   remote_user: concaf
   become: true
   roles:
-  - common
   - docker
   gather_facts: false
 
