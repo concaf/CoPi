@@ -1,0 +1,49 @@
+---
+
+- name: copy certs to /var/lib/kubernetes/
+  synchronize:
+    src: /tmp/certs/{{ item }}
+    dest: /var/lib/kubernetes/
+  with_items:
+  - token.csv
+  - ca.pem
+  - ca-key.pem
+  - kubernetes-key.pem
+  - kubernetes.pem
+
+- name: download Kubernetes v1.6.4 binaries
+  get_url:
+    url: "{{ item.url }}"
+    dest: /usr/bin/{{ item.file }}
+    mode: 0755
+  with_items:
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kube-apiserver", file: "kube-apiserver"}
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kube-controller-manager", file: "kube-controller-manager" }
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kube-scheduler", file: "kube-scheduler" }
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kubectl", file: "kubectl" }
+
+- name: set up systemd service files
+  template:
+    src: "{{ item.template_name }}"
+    dest: /usr/lib/systemd/system/{{ item.file_name }}
+  with_items:
+  - { template_name: "kube-apiserver.service.j2", file_name: "kube-apiserver.service" }
+  - { template_name: "kube-controller-manager.service.j2", file_name: "kube-controller-manager.service" }
+  - { template_name: "kube-scheduler.service.j2", file_name: "kube-scheduler.service" }
+  register: systemd_service
+
+- name: systemctl daemon-reload and restart service
+  systemd:
+    name: "{{ item.item.file_name }}"
+    daemon_reload: yes
+    state: restarted
+  with_items: "{{ systemd_service.results }}"
+  when: item.changed
+
+# - name: give user permissions to /var/lib/
+#   acl:
+#     path: /var/lib/
+#     entity: concaf
+#     permissions: rwx
+#     etype: user
+#     state: present

@@ -14,6 +14,7 @@
   tags:
   - local
   - certs
+  gather_facts: false
 
 - hosts: etcd
   remote_user: concaf
@@ -23,3 +24,12 @@
   gather_facts: false
   tags:
   - etcd
+
+- hosts: master
+  remote_user: concaf
+  gather_facts: false
+  become: true
+  roles:
+  - control_plane
+  tags:
+  - control
