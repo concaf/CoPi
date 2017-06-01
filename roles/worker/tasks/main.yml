@@ -1,0 +1,51 @@
+---
+
+- name: copy certs
+  synchronize:
+    src: /tmp/certs/{{ item.local }}
+    dest: " {{ item.remote }} "
+  with_items:
+  - { local: bootstrap.kubeconfig, remote: /var/lib/kubelet/ }
+  - { local: kube-proxy.kubeconfig, remote: /var/lib/kube-proxy/ }
+  - { local: ca.pem, remote: /var/lib/kubernetes/ }
+
+- name: create /opt/cni/ directory
+  file:
+    path: /opt/cni/
+    state: directory
+    mode: 0755
+
+- name: download CNI plugins
+  unarchive:
+    src: https://storage.googleapis.com/kubernetes-release/network-plugins/cni-arm-0799f5732f2a11b329d9e3d51b9c8f2e3759f2ff.tar.gz
+    dest: /opt/cni/
+    remote_src: yes
+    creates: /opt/cni/bin/bridge
+
+- name: download and install packages
+  get_url:
+    url: "{{ item.url }}"
+    dest: /usr/bin/{{ item.file }}
+    mode: 0755
+  with_items:
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kubectl", file: "kubectl"}
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kube-proxy", file: "kube-proxy"}
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kubelet", file: "kubelet"}
+
+- name: set up systemd service files
+  template:
+    src: "{{ item.template_name }}"
+    dest: /usr/lib/systemd/system/{{ item.file_name }}
+  with_items:
+  - { template_name: "kubelet.service.j2", file_name: "kubelet.service" }
+  - { template_name: "kube-proxy.service.j2", file_name: "kube-proxy.service" }
+  register: systemd_service
+
+- name: systemctl daemon-reload and restart service
+  systemd:
+    name: "{{ item.item.file_name }}"
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
+  with_items: "{{ systemd_service.results }}"
+  when: item.changed

@@ -36,14 +36,26 @@
   systemd:
     name: "{{ item.item.file_name }}"
     daemon_reload: yes
+    enabled: yes
     state: restarted
   with_items: "{{ systemd_service.results }}"
   when: item.changed
 
-# - name: give user permissions to /var/lib/
-#   acl:
-#     path: /var/lib/
-#     entity: concaf
-#     permissions: rwx
-#     etype: user
-#     state: present
+- name: enable TLS bootstrapping
+  shell:
+    cmd: |
+      kubectl apply -f - <<-EOF    
+      apiVersion: rbac.authorization.k8s.io/v1beta1
+      kind: ClusterRoleBinding
+      metadata:
+        name: kubelet-bootstrap
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: system:node-bootstrapper
+      subjects:
+      - apiGroup: rbac.authorization.k8s.io
+        kind: User
+        name: kubelet-bootstrap
+      EOF
+  when: inventory_hostname == groups["master"][0]

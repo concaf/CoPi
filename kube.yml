@@ -33,3 +33,13 @@
   - control_plane
   tags:
   - control
+
+- hosts: node
+  remote_user: concaf
+  gather_facts: false
+  become: true
+  roles:
+  - worker
+  tags:
+  - node
+
