@@ -1,0 +1,6 @@
+---
+
+- name: systemctl daemon-reload
+  systemd:
+    name: docker
+    daemon_reload: yes

@@ -8,3 +8,5 @@
   - ca.pem
   - etcd-key.pem
   - etcd.pem
+  notify:
+  - systemctl daemon-reload

@@ -8,6 +8,8 @@
   - { local: bootstrap.kubeconfig, remote: /var/lib/kubelet/ }
   - { local: kube-proxy.kubeconfig, remote: /var/lib/kube-proxy/ }
   - { local: ca.pem, remote: /var/lib/kubernetes/ }
+  notify:
+  - systemctl daemon-reload
 
 - name: create /opt/cni/ directory
   file:
@@ -28,9 +30,9 @@
     dest: /usr/bin/{{ item.file }}
     mode: 0755
   with_items:
-  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kubectl", file: "kubectl"}
-  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kube-proxy", file: "kube-proxy"}
-  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kubelet", file: "kubelet"}
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.6/bin/linux/arm/kubectl", file: "kubectl"}
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.6/bin/linux/arm/kube-proxy", file: "kube-proxy"}
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.6/bin/linux/arm/kubelet", file: "kubelet"}
 
 - name: set up systemd service files
   template:

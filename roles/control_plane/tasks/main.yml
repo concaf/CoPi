@@ -10,17 +10,19 @@
   - ca-key.pem
   - kubernetes-key.pem
   - kubernetes.pem
+  notify:
+  - systemctl daemon-reload
 
-- name: download Kubernetes v1.6.4 binaries
+- name: download Kubernetes v1.6.6 binaries
   get_url:
     url: "{{ item.url }}"
     dest: /usr/bin/{{ item.file }}
     mode: 0755
   with_items:
-  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kube-apiserver", file: "kube-apiserver"}
-  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kube-controller-manager", file: "kube-controller-manager" }
-  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kube-scheduler", file: "kube-scheduler" }
-  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/arm/kubectl", file: "kubectl" }
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.6/bin/linux/arm/kube-apiserver", file: "kube-apiserver"}
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.6/bin/linux/arm/kube-controller-manager", file: "kube-controller-manager" }
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.6/bin/linux/arm/kube-scheduler", file: "kube-scheduler" }
+  - { url: "https://storage.googleapis.com/kubernetes-release/release/v1.6.6/bin/linux/arm/kubectl", file: "kubectl" }
 
 - name: set up systemd service files
   template:
